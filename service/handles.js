@@ -9,12 +9,12 @@ const handles = {
     }));
     res.end();
   },
-  handleError(res, status, detailCode ,data) {
+  handleError(res, status, detailCode , message) {
     const errorStatusCode = {
       205: 'Reset Content',
       400: {
         40001: '無對應資料',
-        40002: data,
+        40002: message,
         40003: '無此 ID'
       },
       404: '無此要求'
@@ -23,7 +23,7 @@ const handles = {
     res.writeHead(status, headers);
     res.write(JSON.stringify({
       status: 'false',
-      data: outputMessage
+      message: outputMessage
     }));
     res.end();
   }
