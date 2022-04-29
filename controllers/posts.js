@@ -40,11 +40,15 @@ const posts = {
   async patchPost(req, res) {
     const postId = req.params.id
     const data = req.body;
-    const isPass  = checkBody(res, data)
+    const isPass  = checkBody(res, data);
     if (isPass) {
       try {
-        await Post.findByIdAndUpdate(postId, data);
-        handleSuccess(res, '修改資料成功');
+        const result = await Post.findByIdAndUpdate(postId, data);
+        if (!result) {
+          handleError(res, 400, 40003);
+        } else {
+          handleSuccess(res, '修改資料成功');
+        }
       } catch (error) {
         handleError(res, 400, 40002, error.message)
       }
