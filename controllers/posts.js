@@ -10,21 +10,17 @@ const posts = {
     handleSuccess(res, posts);
   },
   async postPost(req, res) {
-    try {
-      const data = req.body;
-      const isPass = checkBody(res, data);
-      if (isPass) {
+    const data = req.body;
+    const isPass = checkBody(res, data);
+    if (isPass) {
+      try {
         const newPost = await Post.create({
-          name: data.name,
-          tags: data.tags,
-          type: data.type,
-          image: data.image,
-          content: data.content,
-        })
+          ...data
+        });
         handleSuccess(res, newPost);
+      } catch (error) {
+        handleError(res, 400, 40002, error.message)
       }
-    } catch(error) {
-      handleError(res, 400, 40001)
     }
   },
   async deletePosts(req, res) {
@@ -42,20 +38,16 @@ const posts = {
     }
   },
   async patchPost(req, res) {
-    try {
-      const postId = req.params.id
-      const data = req.body;
-      const isPass  = checkBody(res, data)
-      if (isPass) {
-        try {
-          await Post.findByIdAndUpdate(postId, data);
-          handleSuccess(res, '修改資料成功');
-        } catch {
-          handleError(res, 400, 40003);
-        }
+    const postId = req.params.id
+    const data = req.body;
+    const isPass  = checkBody(res, data)
+    if (isPass) {
+      try {
+        await Post.findByIdAndUpdate(postId, data);
+        handleSuccess(res, '修改資料成功');
+      } catch (error) {
+        handleError(res, 400, 40002, error.message)
       }
-    } catch {
-      handleError(res, 400, 40001);
     }
   }
 }
